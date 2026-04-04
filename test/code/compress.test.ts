@@ -26,4 +26,11 @@ describe("compress", () => {
 		const result = await compress(code, true);
 		expect(result).toBe(code);
 	});
+
+	it("should return original code when minify result has no code property", async () => {
+		// An empty string is valid JS but minifies to empty, testing the ?? fallback
+		const code = "";
+		const result = await compress(code, true);
+		expect(typeof result).toBe("string");
+	});
 });

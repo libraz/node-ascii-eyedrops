@@ -1,6 +1,6 @@
 {
 	"name": "@libraz/ascii-eyedrops",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "True Visual Programming for JavaScript — transform your code into executable ASCII art",
 	"type": "module",
 	"engines": {

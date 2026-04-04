@@ -2,10 +2,8 @@
  * @file Node.js image adapter using sharp.
  */
 
-import type { ImageAdapter, RawImage } from "./types.js";
-
-/** @brief Terminal character aspect ratio correction factor (chars are ~2x taller than wide). */
-const ASPECT_CORRECTION = 0.5;
+import type { ImageAdapter, RawImage } from "../../types.js";
+import { ASPECT_CORRECTION } from "./constants.js";
 
 /**
  * @brief Image adapter backed by the sharp library (Node.js).

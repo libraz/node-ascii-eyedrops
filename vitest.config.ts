@@ -7,7 +7,6 @@ export default defineConfig({
 			include: ["src/**/*.ts"],
 			exclude: [
 				"src/ascii/adapter/canvas-adapter.ts",
-				"src/ascii/adapter/types.ts",
 				"src/types.ts",
 				"src/util/base64.ts",
 				"src/util/gzip.ts",

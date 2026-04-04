@@ -99,4 +99,50 @@ describe("transform round-trip", () => {
 		expect((globalThis as any).__test_multi).toEqual([1, 2]);
 		delete (globalThis as any).__test_multi;
 	});
+
+	it("should execute original code via gzip binary mode", async () => {
+		const code = "globalThis.__test_gzip_bin = 77;";
+		const payload = await encode(code, true);
+		const grid = darkGrid(100, 20);
+		const output = layout(payload, grid, "binary", true, 128);
+
+		eval(output);
+		expect((globalThis as any).__test_gzip_bin).toBe(77);
+		delete (globalThis as any).__test_gzip_bin;
+	});
+
+	it("should execute original code via gzip shaded mode", async () => {
+		const code = "globalThis.__test_gzip_shd = 88;";
+		const payload = await encode(code, true);
+		const grid = darkGrid(100, 20);
+		const output = layout(payload, grid, "shaded", true, 128);
+
+		eval(output);
+		expect((globalThis as any).__test_gzip_shd).toBe(88);
+		delete (globalThis as any).__test_gzip_shd;
+	});
+
+	it("should handle code with special characters", async () => {
+		const code = 'globalThis.__test_special = "hello\\nworld\\t\\"quoted\\"";';
+		const payload = await encode(code, false);
+		const grid = darkGrid(100, 20);
+		const output = layout(payload, grid, "binary", false, 128);
+
+		eval(output);
+		expect((globalThis as any).__test_special).toBe('hello\nworld\t"quoted"');
+		delete (globalThis as any).__test_special;
+	});
+
+	it("should handle unicode in code via gzip mode", async () => {
+		// Non-gzip mode uses atob() which doesn't support UTF-8 multi-byte.
+		// Gzip mode uses Buffer.toString() which handles UTF-8 correctly.
+		const code = 'globalThis.__test_unicode = "こんにちは";';
+		const payload = await encode(code, true);
+		const grid = darkGrid(120, 20);
+		const output = layout(payload, grid, "binary", true, 128);
+
+		eval(output);
+		expect((globalThis as any).__test_unicode).toBe("こんにちは");
+		delete (globalThis as any).__test_unicode;
+	});
 });

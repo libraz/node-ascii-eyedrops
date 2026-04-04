@@ -47,4 +47,25 @@ describe("layoutBinary", () => {
 		const lines = layoutBinary("A", grid, 50);
 		expect(lines[0]).toBe("  ");
 	});
+
+	it("should treat luminance equal to threshold as dark", () => {
+		const grid: LuminanceGrid = {
+			data: new Uint8Array([128]),
+			width: 1,
+			height: 1,
+		};
+		const lines = layoutBinary("X", grid, 128);
+		expect(lines[0]).toBe("X");
+	});
+
+	it("should handle empty payload with all-dark grid", () => {
+		const grid: LuminanceGrid = {
+			data: new Uint8Array([0, 0, 0, 0]),
+			width: 2,
+			height: 2,
+		};
+		const lines = layoutBinary("", grid, 128);
+		expect(lines[0]).toBe("##");
+		expect(lines[1]).toBe("##");
+	});
 });

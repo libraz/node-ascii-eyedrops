@@ -29,4 +29,23 @@ describe("mapToChars", () => {
 		const result = mapToChars(new Uint8Array([0]), 1, "");
 		expect(result).toBe(DEFAULT_CHARSET[0]);
 	});
+
+	it("should work with a single-character charset", () => {
+		const data = new Uint8Array([0, 128, 255]);
+		const result = mapToChars(data, 3, "X");
+		expect(result).toBe("XXX");
+	});
+
+	it("should handle a full luminance range across multiple rows", () => {
+		const data = new Uint8Array([0, 128, 255, 64, 192, 32]);
+		const result = mapToChars(data, 3);
+		const lines = result.split("\n");
+		expect(lines.length).toBe(2);
+		for (const line of lines) {
+			expect(line.length).toBe(3);
+			for (const ch of line) {
+				expect(DEFAULT_CHARSET).toContain(ch);
+			}
+		}
+	});
 });

@@ -7,10 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { ImageAdapter, RawImage } from "./types.js";
-
-/** @brief Terminal character aspect ratio correction factor. */
-const ASPECT_CORRECTION = 0.5;
+import type { ImageAdapter, RawImage } from "../../types.js";
+import { ASPECT_CORRECTION } from "./constants.js";
 
 /** @brief Type aliases for browser globals not present in Node type definitions. */
 declare const OffscreenCanvas: any;

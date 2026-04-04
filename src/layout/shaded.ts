@@ -7,14 +7,7 @@
  */
 
 import type { LuminanceGrid } from "../types.js";
-
-/**
- * @brief Filler characters ordered from lightest to darkest visual weight.
- *
- * All characters are non-base64 safe, so they can be cleanly stripped
- * during decode via `/[^A-Za-z0-9+\/=]/g`.
- */
-const FILLERS = [".", ":", "-", "~", "!", "*", "#", "@", "%"];
+import { selectFiller } from "./fillers.js";
 
 /**
  * @brief Lay out payload characters with full-width shaded filler.
@@ -36,7 +29,6 @@ export function layoutShaded(
 ): string[] {
 	const { data, width, height } = grid;
 	const lines: string[] = [];
-	const maxFillerIdx = FILLERS.length - 1;
 	let idx = 0;
 
 	for (let y = 0; y < height; y++) {
@@ -47,9 +39,7 @@ export function layoutShaded(
 			if (lum <= threshold && idx < payload.length) {
 				line += payload[idx++];
 			} else {
-				// Map luminance to filler: 0 (darkest) -> last filler, 255 (lightest) -> first filler
-				const fillerIdx = Math.floor(((255 - lum) / 255) * maxFillerIdx);
-				line += FILLERS[fillerIdx];
+				line += selectFiller(lum);
 			}
 		}
 		lines.push(line);

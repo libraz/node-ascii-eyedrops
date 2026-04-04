@@ -5,11 +5,9 @@
  * that make the output a valid, executable JavaScript program.
  */
 
-import type { LayoutMode } from "../types.js";
-
 /**
  * @brief Generate the preamble code that initializes the payload accumulator.
- * @returns JavaScript statement: `var $_=""`
+ * @returns JavaScript statement: `var $_="",R=/[^\w+\/=]/g`
  */
 export function buildPreamble(): string {
 	return 'var $_="",R=/[^\\w+\\/=]/g';
@@ -24,13 +22,8 @@ export function buildLine(content: string): string {
 	return `;$_+="${content}"`;
 }
 
-/**
- * @brief Generate the line-end comment marker.
- * @returns `//`
- */
-export function buildLineComment(): string {
-	return "//";
-}
+/** @brief Line-end comment marker appended to every output line. */
+export const LINE_COMMENT = "//";
 
 /**
  * @brief The strip regex variable name used in generated code.
@@ -45,13 +38,12 @@ const STRIP_VAR = "R";
  * @brief Generate the postamble code that decodes and executes the payload.
  *
  * Uses `eval(atob(...))` for non-gzip (Node 16+ supports global atob).
- * Uses a self-executing function with DecompressionStream/zlib for gzip.
+ * Uses a self-executing function with zlib.gunzipSync for gzip.
  *
- * @param mode Layout mode ("binary" or "shaded").
  * @param gzip Whether gzip decompression is needed.
  * @returns JavaScript code string (without line comment suffix).
  */
-export function buildPostamble(_mode: LayoutMode, gzip: boolean): string {
+export function buildPostamble(gzip: boolean): string {
 	if (!gzip) {
 		return `;eval(atob($_.replace(${STRIP_VAR},"")))`;
 	}

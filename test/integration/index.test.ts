@@ -96,6 +96,30 @@ describe("transform (full integration)", () => {
 		expect((globalThis as any).__idx_default).toBe(10);
 		delete (globalThis as any).__idx_default;
 	});
+
+	it("should produce executable JS with compress + gzip combined", async () => {
+		const code = "globalThis.__idx_both = 13;";
+		const output = await transform(code, {
+			image: testImagePath,
+			ascii: { width: 40 },
+			compress: true,
+			gzip: true,
+		});
+		eval(output);
+		expect((globalThis as any).__idx_both).toBe(13);
+		delete (globalThis as any).__idx_both;
+	});
+
+	it("should throw when payload exceeds image capacity", async () => {
+		const longCode = `globalThis.__idx_overflow = "${"x".repeat(5000)}";`;
+		await expect(
+			transform(longCode, {
+				image: testImagePath,
+				ascii: { width: 10 },
+				compress: false,
+			}),
+		).rejects.toThrow(/Payload too large/);
+	});
 });
 
 describe("imageToAscii (full integration)", () => {

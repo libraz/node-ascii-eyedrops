@@ -5,8 +5,7 @@
  * environments.
  */
 
-const isNode =
-	typeof process !== "undefined" && process.versions?.node !== undefined;
+import { isNode } from "./env.js";
 
 /**
  * @brief Compress data with gzip.
@@ -20,8 +19,8 @@ export async function gzipEncode(data: Uint8Array): Promise<Uint8Array> {
 		const result = await promisify(gzip)(Buffer.from(data));
 		return new Uint8Array(result);
 	}
-	const { deflate } = await import("pako");
-	return deflate(data, { level: 9 });
+	const pako = await import("pako");
+	return pako.gzip(data, { level: 9 });
 }
 
 /**
@@ -36,6 +35,6 @@ export async function gzipDecode(data: Uint8Array): Promise<Uint8Array> {
 		const result = await promisify(gunzip)(Buffer.from(data));
 		return new Uint8Array(result);
 	}
-	const { inflate } = await import("pako");
-	return inflate(data);
+	const pako = await import("pako");
+	return pako.ungzip(data);
 }

@@ -8,16 +8,14 @@
 
 import {
 	buildLine,
-	buildLineComment,
 	buildPostamble,
 	buildPreamble,
+	LINE_COMMENT,
 } from "../code/template.js";
 import type { LayoutMode, LuminanceGrid } from "../types.js";
 import { layoutBinary } from "./binary.js";
+import { selectFiller } from "./fillers.js";
 import { layoutShaded } from "./shaded.js";
-
-/** @brief Filler characters ordered from lightest to darkest visual weight. */
-const FILLERS = [".", ":", "-", "~", "!", "*", "#", "@", "%"];
 
 /**
  * @brief Count the number of dark cells in the grid.
@@ -33,16 +31,6 @@ function countDarkCells(grid: LuminanceGrid, threshold: number): number {
 		}
 	}
 	return count;
-}
-
-/**
- * @brief Select a filler character matching a luminance value.
- * @param luminance Pixel luminance (0=darkest, 255=lightest).
- * @returns Filler character of appropriate visual weight.
- */
-function selectFiller(luminance: number): string {
-	const maxIdx = FILLERS.length - 1;
-	return FILLERS[Math.floor(((255 - luminance) / 255) * maxIdx)];
 }
 
 /**
@@ -132,9 +120,8 @@ export function layout(
 			? layoutShaded(payload, grid, threshold)
 			: layoutBinary(payload, grid, threshold);
 
-	const comment = buildLineComment();
 	const preambleCode = buildPreamble();
-	const postambleCode = buildPostamble(mode, gzip);
+	const postambleCode = buildPostamble(gzip);
 
 	// Target width: the widest of payload lines, preamble, or postamble
 	// Payload line = `;$_+="` (6) + content (gridWidth) + `"` (1) + `//` (2)
@@ -161,7 +148,7 @@ export function layout(
 	// Payload content lines (padded to uniform width)
 	const payloadPad = targetWidth - payloadLineWidth;
 	const payloadSuffix =
-		payloadPad > 0 ? " ".repeat(payloadPad) + comment : comment;
+		payloadPad > 0 ? " ".repeat(payloadPad) + LINE_COMMENT : LINE_COMMENT;
 	for (const content of contentLines) {
 		output.push(`${buildLine(content)}${payloadSuffix}`);
 	}

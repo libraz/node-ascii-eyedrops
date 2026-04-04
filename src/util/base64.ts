@@ -5,8 +5,7 @@
  * btoa/atob otherwise.
  */
 
-const isNode =
-	typeof process !== "undefined" && process.versions?.node !== undefined;
+import { isNode } from "./env.js";
 
 /**
  * @brief Encode a byte array to a base64 string.

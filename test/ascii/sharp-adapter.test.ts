@@ -39,4 +39,9 @@ describe("SharpAdapter", () => {
 	it("should throw on invalid input", async () => {
 		await expect(adapter.decode("nonexistent.png", 40)).rejects.toThrow();
 	});
+
+	it("should throw on image with unreadable metadata", async () => {
+		// A zero-byte or corrupt buffer has no valid metadata
+		await expect(adapter.decode(new Uint8Array(0), 40)).rejects.toThrow();
+	});
 });
