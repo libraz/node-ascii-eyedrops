@@ -1,6 +1,6 @@
 {
 	"name": "@libraz/ascii-eyedrops",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "True Visual Programming for JavaScript — transform your code into executable ASCII art",
 	"type": "module",
 	"engines": {
@@ -10,7 +10,7 @@
 		".": {
 			"import": {
 				"types": "./dist/index.d.ts",
-				"default": "./dist/index.mjs"
+				"default": "./dist/index.js"
 			},
 			"require": {
 				"types": "./dist/index.d.cts",
@@ -19,7 +19,7 @@
 		}
 	},
 	"main": "./dist/index.cjs",
-	"module": "./dist/index.mjs",
+	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"files": [
 		"dist"
@@ -31,7 +31,10 @@
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check .",
 		"lint:fix": "biome check --fix .",
-		"format": "biome format --write ."
+		"format": "biome format --write .",
+		"demo": "vite demo",
+		"prepack": "cp README.md .readme-backup && cp README.npm.md README.md && mv README.npm.md .readme-npm-backup",
+		"postpack": "mv .readme-backup README.md && mv .readme-npm-backup README.npm.md"
 	},
 	"dependencies": {
 		"pako": "^2.1.0"
@@ -56,6 +59,7 @@
 		"terser": "^5.46.1",
 		"tsup": "^8.5.1",
 		"typescript": "^5.8.3",
+		"vite": "^8.0.3",
 		"vitest": "^4.1.2"
 	},
 	"volta": {

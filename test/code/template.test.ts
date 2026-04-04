@@ -8,8 +8,8 @@ import {
 
 describe("template", () => {
 	describe("buildPreamble", () => {
-		it("should return var declaration", () => {
-			expect(buildPreamble()).toBe('var $_=""');
+		it("should return var declaration with strip regex", () => {
+			expect(buildPreamble()).toBe('var $_="",R=/[^\\w+\\/=]/g');
 		});
 
 		it("should be valid JavaScript", () => {

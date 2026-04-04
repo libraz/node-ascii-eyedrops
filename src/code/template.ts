@@ -12,7 +12,7 @@ import type { LayoutMode } from "../types.js";
  * @returns JavaScript statement: `var $_=""`
  */
 export function buildPreamble(): string {
-	return 'var $_=""';
+	return 'var $_="",R=/[^\\w+\\/=]/g';
 }
 
 /**
@@ -33,12 +33,13 @@ export function buildLineComment(): string {
 }
 
 /**
- * @brief The strip regex pattern used in generated code.
+ * @brief The strip regex variable name used in generated code.
  *
- * Strips all non-base64 characters (spaces, fillers, dark-padding).
- * Unified across both binary and shaded modes.
+ * The regex itself is defined in the preamble as `R=/[^\w+\/=]/g`.
+ * Uses `\w` ([A-Za-z0-9_]) instead of `[A-Za-z0-9]` for brevity.
+ * Safe because `_` never appears in filler/padding characters.
  */
-const STRIP_PATTERN = "/[^A-Za-z0-9+\\/=]/g";
+const STRIP_VAR = "R";
 
 /**
  * @brief Generate the postamble code that decodes and executes the payload.
@@ -52,13 +53,13 @@ const STRIP_PATTERN = "/[^A-Za-z0-9+\\/=]/g";
  */
 export function buildPostamble(_mode: LayoutMode, gzip: boolean): string {
 	if (!gzip) {
-		return `;eval(atob($_.replace(${STRIP_PATTERN},"")))`;
+		return `;eval(atob($_.replace(${STRIP_VAR},"")))`;
 	}
 
 	// Gzip: synchronous decompression via zlib.gunzipSync
 	return (
 		`;eval(require("zlib").gunzipSync(` +
-		`Buffer.from($_.replace(${STRIP_PATTERN},""),"base64")` +
+		`Buffer.from($_.replace(${STRIP_VAR},""),"base64")` +
 		`).toString())`
 	);
 }

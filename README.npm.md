@@ -1,41 +1,39 @@
-# node-ascii-eyedrops
+# @libraz/ascii-eyedrops
 
 [![CI](https://img.shields.io/github/actions/workflow/status/libraz/node-ascii-eyedrops/ci.yml?branch=main&label=CI)](https://github.com/libraz/node-ascii-eyedrops/actions)
 [![codecov](https://codecov.io/gh/libraz/node-ascii-eyedrops/graph/badge.svg)](https://codecov.io/gh/libraz/node-ascii-eyedrops)
 [![npm](https://img.shields.io/npm/v/@libraz/ascii-eyedrops)](https://www.npmjs.com/package/@libraz/ascii-eyedrops)
-[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/libraz/node-ascii-eyedrops/blob/main/LICENSE)
-[![Node](https://img.shields.io/badge/node-%3E%3D16-green?logo=node.js)](https://nodejs.org/)
-[![Platform](https://img.shields.io/badge/platform-Node.js%20%7C%20Browser-lightgrey)](https://github.com/libraz/node-ascii-eyedrops)
+[![License](https://img.shields.io/github/license/libraz/node-ascii-eyedrops)](https://github.com/libraz/node-ascii-eyedrops/blob/main/LICENSE)
 
-**JavaScript のための、真のヴィジュアルプログラミング。**
+**True Visual Programming for JavaScript.**
 
-ソフトウェア業界はコードを「読みやすく」するツールを量産してきた。
-Prettier。ESLint。EditorConfig。ソースコードをあらゆる他のソースコードと
-同じ見た目にするという崇高な目的に、優秀なエンジニアのキャリアが費やされてきた。
+The software industry has mass-produced tools to make code "readable."
+Prettier. ESLint. EditorConfig. Entire careers have been devoted to the
+noble cause of making source code look like every other source code.
 
-これは人類の工学的才能の悲劇的な誤配分である。
+This is a tragic misallocation of engineering talent.
 
-2001年、[Acme::EyeDrops](https://metacpan.org/pod/Acme::EyeDrops) は
-Perl プログラムを ASCIIアート——実行可能な ASCIIアート——に変換することで、
-この事実を決定的に証明した。プログラムはちゃんと動いた。
-ただ、見た目がラクダになっていただけだ。世界はまだ準備ができていなかった。
+In 2001, [Acme::EyeDrops](https://metacpan.org/pod/Acme::EyeDrops) proved
+this conclusively by converting Perl programs into ASCII art — executable
+ASCII art. The programs still ran. They just happened to look like camels.
+The world was not ready.
 
-世界はまだ準備ができていない。だが、我々はここにいる。
+The world is still not ready. But here we are.
 
-`@libraz/ascii-eyedrops` はこの革新を JavaScript にもたらす。
-「ヴィジュアルプログラミング」と聞いて、人々はドラッグ&ドロップのブロックや
-フローチャートエディタを思い浮かべる。敬意を込めて言うが、抽象化のレイヤーを間違えている。
-**コードがアートだ。アートを実行する。**
+`@libraz/ascii-eyedrops` brings this breakthrough to JavaScript. When people say
+"visual programming," they mean drag-and-drop blocks and flowchart editors.
+They are, respectfully, parsing the wrong abstraction.
+**The code _is_ the art. You run the art.**
 
 ## Before & After
 
-こんな無機質なコードが:
+This:
 
 ```javascript
 console.log("You my hero, Elon.");
 ```
 
-こうなる:
+Becomes this:
 
 ```javascript
 var $_="",R=/[^\w+\/=]/g/*----------------~--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*///
@@ -95,9 +93,9 @@ var $_="",R=/[^\w+\/=]/g/*----------------~--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;eval(atob($_.replace(R,"")))/**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*!!!!*!!!****///
 ```
 
-**アートになった。**
+**It's art now.**
 
-## インストール
+## Installation
 
 ```bash
 # yarn
@@ -107,34 +105,33 @@ yarn add @libraz/ascii-eyedrops
 npm install @libraz/ascii-eyedrops
 ```
 
+## Usage
 
-## 使い方
-
-### コードをASCIIアートに変換
+### Transform code into ASCII art
 
 ```javascript
 import { transform } from "@libraz/ascii-eyedrops";
 
 const code = 'console.log("Hello, world!")';
 
-// binary モード: 暗ピクセル = コード文字、明ピクセル = スペース
+// Binary mode: dark pixels = code chars, light pixels = spaces
 const binaryArt = await transform(code, {
-  image: "./elon.png",
+  image: "./logo.png",
   mode: "binary",
 });
 
-// shaded モード: 全セルを文字で埋め、濃淡でグラデーション表現
+// Shaded mode: all cells filled, varying character density for gradients
 const shadedArt = await transform(code, {
-  image: "./elon.png",
+  image: "./logo.png",
   mode: "shaded",
 });
 
-// どちらも正規の JavaScript:
-eval(binaryArt); // "Hello, world!" と出力
-eval(shadedArt); // "Hello, world!" と出力
+// Both outputs are valid JavaScript:
+eval(binaryArt); // prints "Hello, world!"
+eval(shadedArt); // prints "Hello, world!"
 ```
 
-### 単体ASCIIアート生成
+### Standalone ASCII art generation
 
 ```javascript
 import { imageToAscii } from "@libraz/ascii-eyedrops";
@@ -151,67 +148,45 @@ console.log(art);
 
 ### `transform(code, options)`
 
-JavaScript コードを実行可能な ASCIIアートに変換する。
+Transform JavaScript code into executable ASCII art.
 
-| オプション | 型 | デフォルト | 説明 |
-|---|---|---|---|
-| `image` | `string \| Uint8Array` | *必須* | 元画像 — JPEG, PNG, WebP, GIF, AVIF, TIFF（パスまたはバイナリ） |
-| `mode` | `"binary" \| "shaded"` | `"binary"` | レイアウトモード |
-| `compress` | `boolean` | `true` | terser によるコード圧縮 |
-| `gzip` | `boolean` | `false` | base64 前に gzip 圧縮 |
-| `ascii.width` | `number` | `120` | 出力幅（文字数） |
-| `ascii.height` | `number` | *自動* | 出力高さ（行数） |
-| `ascii.threshold` | `number` | `128` | 明暗2値化の閾値（0-255） |
-| `ascii.invert` | `boolean` | `false` | 明暗反転 |
-| `ascii.contrast` | `number` | `1` | コントラスト補正（0-2） |
-| `ascii.brightness` | `number` | `1` | 明るさ補正（0-2） |
-| `ascii.gamma` | `number` | `1` | ガンマ補正 |
-| `ascii.dither` | `boolean` | `false` | Floyd-Steinberg ディザリング |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `image` | `string \| Uint8Array` | *required* | Source image — JPEG, PNG, WebP, GIF, AVIF, TIFF (path or binary) |
+| `mode` | `"binary" \| "shaded"` | `"binary"` | Layout mode |
+| `compress` | `boolean` | `true` | Minify code via terser |
+| `gzip` | `boolean` | `false` | Gzip compress before encoding |
+| `ascii.width` | `number` | `120` | Output width in characters |
+| `ascii.height` | `number` | *auto* | Output height in rows |
+| `ascii.threshold` | `number` | `128` | Dark/light binarization threshold (0-255) |
+| `ascii.invert` | `boolean` | `false` | Invert light/dark mapping |
+| `ascii.contrast` | `number` | `1` | Contrast adjustment (0-2) |
+| `ascii.brightness` | `number` | `1` | Brightness adjustment (0-2) |
+| `ascii.gamma` | `number` | `1` | Gamma correction |
+| `ascii.dither` | `boolean` | `false` | Floyd-Steinberg dithering |
 
 ### `imageToAscii(input, options?)`
 
-画像から従来型の ASCIIアートを生成する。
+Generate traditional ASCII art from an image.
 
-`transform` と同じ `ascii.*` オプションに加えて:
+Accepts the same `ascii.*` options as `transform`, plus:
 
-| オプション | 型 | デフォルト | 説明 |
-|---|---|---|---|
-| `charset` | `string` | `" .:-=+*#%@"` | 明→暗の文字セット |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `charset` | `string` | `" .:-=+*#%@"` | Characters ordered light to dark |
 
-## レイアウトモード
+## Layout Modes
 
-### Binary
+- **Binary** — The classic Acme::EyeDrops approach. Dark regions are filled with base64 payload characters; light regions become spaces. Enable `dither: true` for detailed images.
+- **Shaded** — Every cell is filled. Dark regions receive payload characters; light regions receive filler characters of varying visual weight for smooth grayscale gradients.
 
-Acme::EyeDrops の古典的手法。画像の暗い領域にはbase64ペイロード文字が、
-明るい領域にはスペースが配置される。コードのシルエットが浮かび上がる。
-
-ディテールの多い画像には `dither: true` を有効にすると細部が保たれる。
-
-### Shaded
-
-全セルが文字で埋められる。暗い領域にはペイロード文字（A-Za-z0-9）、
-明るい領域には視覚的重さの異なる非base64フィラー文字（`. : - ~ ! * # @ %`）が
-配置される。写真や細密な画像に最適な滑らかなグレースケール表現。
-
-フィラー文字はデコード時に正規表現で除去され、元のbase64ペイロードだけが残る。
-
-
-## デモ
-
-インタラクティブなブラウザデモが同梱されている。画像をドロップし、JavaScript コードを入力し、オプションを調整すると、リアルタイムで実行可能な ASCIIアートが生成される。
-
-```bash
-yarn demo
-# http://localhost:5173 が開く
-```
-
-## 動作要件
+## Requirements
 
 - **Node.js** >= 16
-- **sharp**（任意）— Node.js での画像デコード（JPEG, PNG, WebP, GIF, AVIF, TIFF）
-- **terser**（任意）— コード圧縮
-- **ブラウザ** — Canvas API による画像デコード
+- **sharp** (optional) — image decoding in Node.js (JPEG, PNG, WebP, GIF, AVIF, TIFF)
+- **terser** (optional) — for code minification
+- **Browser** — uses Canvas API for image decoding
 
-## ライセンス
+## License
 
-MIT
+[MIT](https://github.com/libraz/node-ascii-eyedrops/blob/main/LICENSE)
